@@ -1,3 +1,6 @@
+#exec: chmod +x build_garnicia.sh
+#run: ./build_garnicia.sh
+
 #!/usr/bin/env bash
 set -e
 
@@ -8,19 +11,25 @@ ARCH="all"
 WORKDIR="$(pwd)/build"
 DEBIAN_DIR="$WORKDIR/DEBIAN"
 USR_BIN="$WORKDIR/usr/bin"
-ICON_DIR="$WORKDIR/usr/share/icons/hicolor/48x48/apps"
+ICON_BASE_DIR="$WORKDIR/usr/share/icons/hicolor"
 DESKTOP_DIR="$WORKDIR/usr/share/applications"
 
 # Clean up any previous build
 rm -rf "$WORKDIR"
-mkdir -p "$DEBIAN_DIR" "$USR_BIN" "$ICON_DIR" "$DESKTOP_DIR"
+mkdir -p "$DEBIAN_DIR" "$USR_BIN" "$DESKTOP_DIR"
 
 # 1. Copy the main script and make it executable
 cp Garnicia.py "$USR_BIN/$PKG_NAME"
 chmod 755 "$USR_BIN/$PKG_NAME"
 
-# 2. Process icon: trim whitespace and resize to 48x48
-convert icon.png -trim +repage -resize 48x48\> "$ICON_DIR/$PKG_NAME.png"
+# 2. Process icon: trim whitespace and resize to multiple standard sizes
+ICON_SIZES=(16 24 32 48 64 128 256 512)
+for size in "${ICON_SIZES[@]}"; do
+    TARGET_DIR="$ICON_BASE_DIR/${size}x${size}/apps"
+    mkdir -p "$TARGET_DIR"
+    convert icon.png -trim +repage -resize "${size}x${size}>" \
+        "$TARGET_DIR/${PKG_NAME}.png"
+done
 
 # 3. Create DEBIAN/control
 cat > "$DEBIAN_DIR/control" <<EOF
