@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Garnicia
+Exec=/usr/bin/Garnicia
+Icon=Garnicia
+Terminal=false
+Categories=Utility;Office;
