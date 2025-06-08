@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
+if ! command -v convert >/dev/null; then
+    echo "Error: imagemagick's 'convert' is required." >&2
+    exit 1
+fi
+
 # Variables
 PKG_NAME="Garnicia"
 PKG_VERSION="1.0"

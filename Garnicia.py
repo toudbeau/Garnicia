@@ -25,10 +25,8 @@ try:
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gtk, Pango
 except ModuleNotFoundError:
-    sys.stderr.write(
-        "Error: PyGObject is required.\n"
-        "Install the 'python3-gi' and 'gir1.2-gtk-3.0' packages.\n"
-    )
+    import sys
+    sys.stderr.write("Required module 'gi' is not installed.\n")
     sys.exit(1)
 
 # Configuration paths

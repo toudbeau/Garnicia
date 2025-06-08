@@ -15,11 +15,11 @@ Garnicia is a lightweight, open-source note-taking application built with Python
 
 - python3-gi
 - gir1.2-gtk-3.0
+- imagemagick  # needed for the build script
 
 ## Installation
 
 # Using the build script
-
 1. Run the build script:
 
    ./build_garnicia.sh
@@ -72,4 +72,5 @@ After installation, you can launch Garnicia from your applications menu or by ru
 ## License
 
 This project is licensed under the GNU General Public License v3.0 (GPLv3).
+See the [LICENSE](LICENSE) file for details.
 
