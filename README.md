@@ -10,11 +10,6 @@ Garnicia is a lightweight, open-source note-taking application built with Python
 - Auto-save with SQLite backup
 - User-friendly GTK 3 interface
 
-## Dependencies
-
-- python3-gi
-- gir1.2-gtk-3.0
-
 ## Installation
 
 # Using the build script
@@ -27,9 +22,9 @@ Garnicia is a lightweight, open-source note-taking application built with Python
 
 2. Install the package:
 
-   sudo apt install ./Garnicia_1.0_all.deb
+   sudo apt install ./garnicia_1.0-1_all.deb
 
-   Replace `Garnicia_1.0_all.deb` with the actual filename if it differs.
+   Replace `garnicia_1.0-1_all.deb` with the actual filename if it differs.
 
 # Manual installation
 

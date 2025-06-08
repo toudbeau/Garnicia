@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Garnicia - A GTK-based note-taking application
 # Copyright (C) 2025 Arthur Dubeux Estevam
 #
@@ -15,21 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#!/usr/bin/env python3
+import gi
 import os
 import sqlite3
 import sys
 import traceback
 
-try:
-    import gi
-    gi.require_version('Gtk', '3.0')
-    from gi.repository import Gtk
-except ModuleNotFoundError:
-    sys.stderr.write(
-        "Error: PyGObject is required.\n"
-        "Install the 'python3-gi' and 'gir1.2-gtk-3.0' packages.\n"
-    )
-    sys.exit(1)
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 # Configuration paths
 CONFIG_FOLDER = os.path.expanduser('~/.config/txtnotes')
