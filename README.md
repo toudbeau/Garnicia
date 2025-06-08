@@ -9,7 +9,9 @@ Garnicia is a lightweight, open-source note-taking application built with Python
 - Inline renaming of notes
 - Auto-save with SQLite backup
 - User-friendly GTK 3 interface
-- Customizable editor font and size
+- Scrollbars for long notes
+- Customizable editor font and size (persistent with a reset option)
+- Basic Markdown formatting buttons (bold and italic)
 
 ## Dependencies
 
@@ -17,18 +19,12 @@ Garnicia is a lightweight, open-source note-taking application built with Python
 - gir1.2-gtk-3.0
 - imagemagick  # needed for the build script
 
-## Dependencies
-
-- python3-gi
-- gir1.2-gtk-3.0
-
-## Installation
-
-# Using the build script
-
-1. Run the build script:
-
-   ./build_garnicia.sh
+6. Use the font drop-down and size spinner in the header to adjust the editor's appearance. The font choice is saved automatically, and the clear icon resets to the default.
+7. Apply basic formatting with the **B** and *I* buttons to insert Markdown bold or italic markers.
+8. To rename a note, double-click its name in the list and enter a new name.
+9. To delete a note, select it and click the trash icon. Confirm the deletion when prompted.
+10. Unsaved changes are indicated with an asterisk (*) next to the note's name.
+11. Garnicia automatically saves your work in a temporary journal. Ensure you click the save icon to permanently save changes to the file.
 
    This will generate a `.deb` package in the current directory.
 

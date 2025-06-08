@@ -25,6 +25,10 @@ try:
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gtk, Pango
 except ModuleNotFoundError:
+SETTINGS_FILE = os.path.join(CONFIG_FOLDER, 'settings')
+
+DEFAULT_FONT = 'monospace'
+DEFAULT_SIZE = 12
     import sys
     sys.stderr.write("Required module 'gi' is not installed.\n")
     sys.exit(1)
@@ -96,14 +100,25 @@ class NotesWindow(Gtk.ApplicationWindow):
         self.font_button.set_use_font(True)
         self.font_button.set_show_size(False)
         self.font_button.connect('font-set', self.on_font_changed)
-        self.font_button.set_font_name('monospace')
         header.pack_end(self.font_button)
 
-        adj = Gtk.Adjustment(12, 6, 72, 1, 10, 0)
+        adj = Gtk.Adjustment(DEFAULT_SIZE, 6, 72, 1, 10, 0)
         self.font_size = Gtk.SpinButton(adjustment=adj, climb_rate=1, digits=0)
         self.font_size.connect('value-changed', self.on_font_size_changed)
         header.pack_end(self.font_size)
-        self.font_size.set_value(12)
+
+        btn_default = Gtk.Button.new_from_icon_name('edit-clear-symbolic', Gtk.IconSize.BUTTON)
+        btn_default.set_tooltip_text('Reset font to default')
+        btn_default.connect('clicked', self.on_default_font)
+        header.pack_end(btn_default)
+
+        self.btn_bold = Gtk.Button(label='B')
+        self.btn_bold.connect('clicked', self.on_bold)
+        header.pack_end(self.btn_bold)
+
+        self.btn_italic = Gtk.Button(label='I')
+        self.btn_italic.connect('clicked', self.on_italic)
+        header.pack_end(self.btn_italic)
 
         # Layout: split list and text view
         paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
@@ -137,6 +152,7 @@ class NotesWindow(Gtk.ApplicationWindow):
         scroll_text.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scroll_text.add(self.textview)
         paned.pack2(scroll_text, resize=True, shrink=True)
+        self.load_font_settings()
         self.update_font()
 
         # Load last folder and populate
@@ -169,12 +185,59 @@ class NotesWindow(Gtk.ApplicationWindow):
         desc = Pango.FontDescription.from_string(self.font_button.get_font_name())
         desc.set_size(int(self.font_size.get_value()) * Pango.SCALE)
         self.textview.modify_font(desc)
+        self.save_font_settings()
 
     def on_font_changed(self, widget):
         self.update_font()
 
     def on_font_size_changed(self, widget):
         self.update_font()
+
+    def on_default_font(self, widget):
+        self.font_button.set_font_name(DEFAULT_FONT)
+        self.font_size.set_value(DEFAULT_SIZE)
+        self.update_font()
+
+    def save_font_settings(self):
+        try:
+            with open(SETTINGS_FILE, 'w', encoding='utf-8') as sf:
+                sf.write(f"{self.font_button.get_font_name()},{int(self.font_size.get_value())}")
+        except Exception as e:
+            self.show_error(f'Settings save failed: {e}')
+
+    def load_font_settings(self):
+        font = DEFAULT_FONT
+        size = DEFAULT_SIZE
+        try:
+            if os.path.exists(SETTINGS_FILE):
+                with open(SETTINGS_FILE, 'r', encoding='utf-8') as sf:
+                    data = sf.read().split(',')
+                if data:
+                    font = data[0] or DEFAULT_FONT
+                    if len(data) > 1:
+                        size = int(data[1])
+        except Exception as e:
+            self.show_error(f'Settings load failed: {e}')
+        self.font_button.set_font_name(font)
+        self.font_size.set_value(size)
+
+    def insert_markdown(self, prefix, suffix=None):
+        buf = self.textbuffer
+        if suffix is None:
+            suffix = prefix
+        try:
+            start, end = buf.get_selection_bounds()
+        except ValueError:
+            return
+        text = buf.get_text(start, end, True)
+        buf.delete(start, end)
+        buf.insert(start, f"{prefix}{text}{suffix}")
+
+    def on_bold(self, widget):
+        self.insert_markdown('**')
+
+    def on_italic(self, widget):
+        self.insert_markdown('*')
 
     def load_last_folder(self):
         try:
