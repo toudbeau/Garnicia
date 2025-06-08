@@ -15,6 +15,7 @@ Garnicia is a lightweight, open-source note-taking application built with Python
 
 - python3-gi
 - gir1.2-gtk-3.0
+- imagemagick  # needed for the build script
 
 ## Installation
 

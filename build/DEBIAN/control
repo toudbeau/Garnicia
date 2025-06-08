@@ -1,9 +1,0 @@
-Package: Garnicia
-Version: 1.0
-Section: utils
-Priority: optional
-Architecture: all
-Maintainer: Arthur Dubeux <atdubeux@proton.me>
-Depends: python3, python3-gi, gir1.2-gtk-3.0
-Description: Garnicia - a GTK3-based journaling application
- A simple note-taking and journaling app using GTK+ 3 and SQLite.
