@@ -23,12 +23,10 @@ import traceback
 try:
     import gi
     gi.require_version('Gtk', '3.0')
-    from gi.repository import Gtk
+    from gi.repository import Gtk, Pango
 except ModuleNotFoundError:
-    sys.stderr.write(
-        "Error: PyGObject is required.\n"
-        "Install the 'python3-gi' and 'gir1.2-gtk-3.0' packages.\n"
-    )
+    import sys
+    sys.stderr.write("Required module 'gi' is not installed.\n")
     sys.exit(1)
 
 # Configuration paths
@@ -93,6 +91,20 @@ class NotesWindow(Gtk.ApplicationWindow):
         btn_delete.connect('clicked', self.on_delete_note)
         header.pack_end(btn_delete)
 
+        # Font selection controls
+        self.font_button = Gtk.FontButton()
+        self.font_button.set_use_font(True)
+        self.font_button.set_show_size(False)
+        self.font_button.connect('font-set', self.on_font_changed)
+        self.font_button.set_font_name('monospace')
+        header.pack_end(self.font_button)
+
+        adj = Gtk.Adjustment(12, 6, 72, 1, 10, 0)
+        self.font_size = Gtk.SpinButton(adjustment=adj, climb_rate=1, digits=0)
+        self.font_size.connect('value-changed', self.on_font_size_changed)
+        header.pack_end(self.font_size)
+        self.font_size.set_value(12)
+
         # Layout: split list and text view
         paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
         self.add(paned)
@@ -125,6 +137,7 @@ class NotesWindow(Gtk.ApplicationWindow):
         scroll_text.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scroll_text.add(self.textview)
         paned.pack2(scroll_text, resize=True, shrink=True)
+        self.update_font()
 
         # Load last folder and populate
         self.load_last_folder()
@@ -151,6 +164,17 @@ class NotesWindow(Gtk.ApplicationWindow):
             text='Error')
         dlg.format_secondary_text(msg)
         dlg.run(); dlg.destroy()
+
+    def update_font(self):
+        desc = Pango.FontDescription.from_string(self.font_button.get_font_name())
+        desc.set_size(int(self.font_size.get_value()) * Pango.SCALE)
+        self.textview.modify_font(desc)
+
+    def on_font_changed(self, widget):
+        self.update_font()
+
+    def on_font_size_changed(self, widget):
+        self.update_font()
 
     def load_last_folder(self):
         try:
