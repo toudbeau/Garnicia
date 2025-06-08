@@ -1,6 +1,3 @@
-#exec: chmod +x build_garnicia.sh
-#run: ./build_garnicia.sh
-
 #!/usr/bin/env bash
 set -e
 
@@ -52,10 +49,11 @@ Source: local
 
 Files: *
 Copyright: 2025 Arthur Dubeux
-License: MIT
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction...
+License: GPL-3
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 3 as
+ published by the Free Software Foundation.  See
+ /usr/share/common-licenses/GPL-3 for the full license text.
 EOF
 
 # 5. Create a simple DEBIAN/rules to satisfy dpkg-deb
