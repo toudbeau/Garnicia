@@ -73,4 +73,5 @@ After installation, you can launch Garnicia from your applications menu or by ru
 ## License
 
 This project is licensed under the GNU General Public License v3.0 (GPLv3).
+See the [LICENSE](LICENSE) file for details.
 
